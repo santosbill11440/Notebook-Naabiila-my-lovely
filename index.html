@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catatan Pangeran Kecil</title>
+<meta name="theme-color" content="#16203a">
+<meta name="description" content="Catatan, jadwal, dan diary bertema Le Petit Prince.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&family=Pixelify+Sans:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.5"/></filter></svg>
+
+<section id="lock" aria-label="Layar kunci">
+  <div class="lk-bg"></div><canvas id="stars" aria-hidden="true"></canvas>
+  <img class="plane" src="assets/plane.png" alt=""><img class="birds" src="assets/birds.png" alt="">
+  <div class="lk-top"><div class="lk-clock" id="lkc"></div><div class="lk-date" id="lkd"></div></div>
+  <div class="lk-cards" id="lkw"></div>
+  <button class="lk-hint" id="unlock" type="button">geser ke atas</button>
+</section>
+
+<section id="home" class="view">
+  <div class="wrap">
+    <div class="top"><img src="assets/prince.png" alt=""><div style="flex:1"><h2 id="hi"></h2><span class="muted" id="hd"></span></div><button class="btn ghost" id="relock" type="button">Kunci</button></div>
+    <div class="card stats"><img src="assets/rose.png" alt="Mawar"><b id="sk">0 hari</b><span id="skt" class="muted"></span><span id="st2"></span><svg id="cons" viewBox="0 0 280 70" role="img" aria-label="Aktivitas menulis 7 hari terakhir" style="grid-column:1/-1;width:100%;max-height:78px"></svg></div>
+    <div class="card"><h3>Hari ini</h3><div id="hnext"></div></div>
+    <div class="card"><h3>Disematkan</h3><div id="hpin"></div></div>
+    <div class="acc"><button class="btn ghost" id="accb" type="button" aria-expanded="false" aria-controls="accp">Pengaturan<span class="pl"></span></button><div class="accp" id="accp"><div><div class="tools">
+      <button class="btn ghost" id="theme" type="button">Mode malam</button>
+      <button class="btn ghost" id="exp" type="button">Ekspor</button>
+      <label class="btn ghost" style="margin:0">Impor<input id="imp" type="file" accept=".json" hidden></label>
+    </div></div></div></div>
+  </div>
+</section>
+
+<section id="notes" class="view" hidden>
+  <div class="wrap">
+    <div class="top"><img src="assets/prince.png" alt=""><h2 style="flex:1">Catatan</h2><button class="btn ghost" id="lv" type="button">Daftar</button></div>
+    <input id="q" type="search" placeholder="Cari judul, isi, atau #tag" aria-label="Cari catatan">
+    <div class="chips" id="modes"><button class="chip" type="button" data-m="n" aria-pressed="true">Catatan</button><button class="chip" type="button" data-m="a" aria-pressed="false">Arsip</button><button class="chip" type="button" data-m="t" aria-pressed="false">Sampah</button></div>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+  <button class="btn fab" id="add" type="button" aria-label="Catatan baru">+</button>
+</section>
+
+<section id="day" class="view" hidden>
+  <div class="wrap">
+    <div class="card">
+      <div class="cal-h"><button class="btn ghost" id="pm" type="button" aria-label="Bulan sebelumnya">‹</button><h3 id="my"></h3><button class="btn ghost" id="nm" type="button" aria-label="Bulan berikutnya">›</button></div>
+      <div class="dow"><span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span></div>
+      <div class="days" id="days"></div>
+    </div>
+    <div class="seg" role="group" aria-label="Pilih tampilan"><i></i><button class="chip" type="button" data-p="ag" aria-pressed="true">Agenda</button><button class="chip" type="button" data-p="di" aria-pressed="false">Diary</button></div>
+    <div class="card" id="p-ag">
+      <div class="row" style="justify-content:space-between"><h2 id="ad"></h2><button class="btn ghost" id="notif" type="button">Pengingat</button></div>
+      <div id="ag"></div>
+      <form id="ef" class="row" style="margin-top:10px">
+        <input id="en" placeholder="Nama kegiatan" maxlength="100" required aria-label="Nama kegiatan">
+        <input id="et2" type="time" required style="max-width:130px" aria-label="Jam">
+        <button class="btn" type="submit">Tambah</button>
+      </form>
+    </div>
+    <div class="card" id="p-di" hidden>
+      <div class="diary-h"><img src="assets/diary.png" alt=""><div><h2>Diary</h2><span class="muted" id="dd"></span></div></div>
+      <textarea id="di" style="margin-top:10px" placeholder="Apa yang terjadi hari ini?" aria-label="Diary"></textarea>
+      <p class="save" id="ds" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<section id="ask" class="view" hidden>
+  <div class="wrap">
+    <div class="top"><img src="assets/sheep.png" alt=""><h2 style="flex:1">Tanya</h2><button class="btn ghost" id="addsrc" type="button">+ Sumber</button><input id="sf" type="file" accept=".txt,.md,text/plain" hidden></div>
+    <div class="card" id="srcs"></div>
+    <div id="chat" aria-live="polite"></div>
+    <div class="chips" id="qa"><button class="chip" type="button" data-k="Buat ringkasan sumber dalam 5 poin.">Ringkas</button><button class="chip" type="button" data-k="Buat 5 soal pilihan ganda beserta kunci jawaban.">Kuis</button><button class="chip" type="button" data-k="Buat panduan belajar: konsep inti, istilah penting, dan 3 pertanyaan latihan.">Panduan belajar</button><button class="chip" type="button" data-k="Buat 5 pertanyaan yang sering muncul beserta jawabannya.">FAQ</button></div>
+    <form id="af" class="row"><input id="aq" placeholder="Tanya dari catatanmu…" aria-label="Pertanyaan" required><button class="btn" type="submit">Kirim</button></form>
+  </div>
+</section>
+
+<nav aria-label="Menu utama"><span class="pill"></span>
+  <a href="#home"><img src="assets/planet.png" alt="">Beranda</a>
+  <a href="#notes"><img src="assets/rose.png" alt="">Catatan</a>
+  <a href="#day"><img src="assets/moon.png" alt="">Hari</a>
+  <a href="#ask"><img src="assets/fox.png" alt="">Tanya</a>
+</nav>
+
+<dialog id="ed"><form id="nf">
+  <input id="et" placeholder="Judul" maxlength="100" aria-label="Judul">
+  <textarea id="eb" placeholder="Tulis di sini. Awali baris dengan [ ] untuk membuat daftar centang." aria-label="Isi catatan"></textarea>
+  <input id="eg" placeholder="Tag, pisahkan dengan koma" aria-label="Tag">
+  <div class="cols" id="cols" role="group" aria-label="Warna"></div>
+  <div class="row"><input type="date" id="erd" aria-label="Tanggal pengingat"><input type="time" id="ert" aria-label="Jam pengingat"><button class="btn ghost" id="mic" type="button" hidden>Suara</button></div>
+  <label class="row"><input type="checkbox" id="ep" style="width:auto"> Sematkan di atas</label>
+  <div class="acts"><button class="btn del" id="dl" type="button">Buang</button><button class="btn ghost" id="ar" type="button">Arsipkan</button><button class="btn ghost" id="dp" type="button">Gandakan</button><button class="btn ghost" id="cn" type="button">Batal</button><button class="btn" type="submit">Simpan</button></div>
+</form></dialog>
+<div id="toast" role="status"></div>
+
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/home.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/ask.js"></script>
+<script src="js/backup.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pwa.js"></script>
+</body>
+</html>
